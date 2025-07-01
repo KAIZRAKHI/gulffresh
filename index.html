@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gulf Fresh - Authentic Flavors, Global Reach</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/c075818245.js"
+      crossorigin="anonymous"
+    ></script>
+    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%);
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+      }
+      .nav-link {
+        position: relative;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        left: 0;
+        background-color: #C1272D;
+        transition: width 0.3s ease;
+      }
+      .nav-link:hover {
+        color: #C1272D;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .hero-shadow {
+        position: relative;
+      }
+      .hero-shadow::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.1) 0%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+        transform: skewY(-12deg);
+        transform-origin: top left;
+        z-index: -1;
+      }
+      .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+      }
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+      @media (max-width: 768px) {
+        .hero-shadow::before {
+          transform: skewY(-6deg);
+        }
+      }
+      .process-image {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+
+      .process-image.animate {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .process-text {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        transition-delay: 0.2s;
+      }
+
+      .process-text.animate {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Add dropdown specific styles */
+      .group:hover .nav-link::after {
+        width: 0;
+      }
+      .group button.nav-link::after {
+        display: none;
+      }
+      .group:hover .absolute {
+        z-index: 1000;
+      }
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #C1272D;
+        border-radius: 6px;
+        border: 3px solid #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #A02025;
+      }
+
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #C1272D #f1f1f1;
+      }
+    </style>
+  </head>
+  <body class="overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-4 py-4">
+      <div
+        class="max-w-7xl mx-auto bg-white rounded-full px-6 sm:px-8 py-4 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]"
+      >
+        <div class="flex justify-between items-center">
+          <!-- Logo -->
+          <a href="/" class="flex items-center">
+            <img
+              src="gulfresh.png"
+              alt="Gulfresh Logo"
+              class="h-12 sm:h-14 w-auto max-w-[180px] sm:max-w-[200px] object-contain"
+            />
+          </a>
+
+          <!-- Navigation Links -->
+          <div class="hidden lg:flex items-center gap-12 ml-auto mr-8">
+            <a href="/" class="nav-link text-gray-800">Home</a>
+            <a href="#about" class="nav-link text-gray-800">About Us</a>
+            <a href="#blog" class="nav-link text-gray-800">Blog</a>
+            <a href="#products" class="nav-link text-gray-800">Products</a>
+          </div>
+
+          <!-- CTA Button -->
+          <div class="flex items-center">
+            <a href="#contact">
+              <button
+                class="hidden sm:block bg-[#C1272D] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#A02025] transition"
+              >
+                Contact Us
+              </button>
+            </a>
+            <!-- Mobile Menu Button -->
+            <button
+              class="lg:hidden text-gray-800 focus:outline-none"
+              onclick="toggleMobileMenu()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobileMenu"
+        class="mobile-menu fixed top-0 right-0 h-full w-full sm:w-80 bg-white z-50"
+      >
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-8">
+            <a href="/" class="flex items-center">
+              <img
+                src="gulfresh.png"
+                alt="Gulfresh Logo"
+                class="h-12 sm:h-14 w-auto max-w-[180px] sm:max-w-[200px] object-contain"
+              />
+            </a>
+            <button
+              onclick="toggleMobileMenu()"
+              class="text-gray-800 focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="flex flex-col space-y-6">
+            <a
+              href="#"
+              class="nav-link text-gray-800 font-montserrat text-[1.1rem]"
+              >Home</a
+            >
+            <a
+              href="#about"
+              class="nav-link text-gray-800 font-montserrat text-[1.1rem]"
+              >About Us</a
+            >
+            <a
+              href="#blog"
+              class="nav-link text-gray-800 font-montserrat text-[1.1rem]"
+              >Blog</a
+            >
+            <div class="space-y-2">
+              <button
+                onclick="toggleMobileSubmenu('productsSubmenu')"
+                class="flex items-center justify-between w-full text-gray-800 font-montserrat text-[1.1rem]"
+              >
+                <span>Products</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 transform transition-transform"
+                  id="productsArrow"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div id="productsSubmenu" class="hidden pl-4 space-y-2">
+                <a
+                  href="spices.html"
+                  class="block text-gray-800 hover:text-[#C1272D] font-montserrat text-[1.1rem]"
+                  >Spices & Herbs</a
+                >
+                <a
+                  href="freshproduce.html"
+                  class="block text-gray-800 hover:text-[#C1272D] font-montserrat text-[1.1rem]"
+                  >Fresh Produce</a
+                >
+                <a
+                  href="coconut.html"
+                  class="block text-gray-800 hover:text-[#C1272D] font-montserrat text-[1.1rem]"
+                  >Coconut Products</a
+                >
+                <a
+                  href="nonperishables.html"
+                  class="block text-gray-800 hover:text-[#C1272D] font-montserrat text-[1.1rem]"
+                  >Non-Perishables</a
+                >
+              </div>
+            </div>
+            <button
+              class="bg-[#C1272D] text-white px-6 py-3 rounded-lg hover:bg-[#A02025] transition mt-4 font-montserrat text-[1.1rem]"
+            >
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen overflow-hidden">
+      <!-- Background Video/Image Container -->
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="relative w-full h-full">
+          <!-- World Map Container -->
+          <div class="absolute inset-0 w-full h-full">
+            <div class="relative w-full h-full md:h-auto">
+              <video
+                class="w-full h-[70vh] md:h-screen object-cover md:object-cover scale-150 md:scale-100"
+                autoplay
+                loop
+                muted
+                playsinline
+              >
+                <source src="jaaas.webm" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Overlay -->
+      <div class="relative h-full max-w-7xl mx-auto px-4">
+        <div
+          class="flex items-end md:items-center md:justify-end h-full pb-6 md:pb-0 md:pt-16"
+        >
+          <!-- Right Content Card -->
+          <div
+            class="w-full md:w-[360px] lg:w-[390px] transform hover:scale-[1.02] transition-all duration-500"
+          >
+            <div
+              class="relative bg-white/90 rounded-3xl p-6 sm:p-8 border-[#C1272D]"
+            >
+              <!-- Content -->
+              <div class="relative z-10">
+                <h1
+                  class="text-2xl sm:text-[2.75rem] font-light leading-tight mb-3 md:mb-4 text-gray-900"
+                >
+                  Authentic Flavors,<br />
+                  <span class="text-gray-900">Global Reach</span>
+                </h1>
+                <p
+                  class="text-gray-600 text-sm sm:text-base mb-4 md:mb-6 leading-relaxed"
+                >
+                  Experience the richness of Indian heritage with Gulf Fresh.
+                  From the finest spices to premium coconuts, handicrafts, and
+                  antiques, we bring quality and tradition to the world.
+                </p>
+                <a
+                  href="#about"
+                  class="inline-flex items-center justify-center px-6 py-3 text-sm sm:text-base font-medium text-white bg-[#C1272D] rounded-full hover:bg-[#A02025] transition-all duration-500"
+                >
+                  <span>Discover Gulf Fresh</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Section -->
+    <section class="py-16 sm:py-20 bg-white" id="about">
+      <div class="container mx-auto px-4 sm:px-6">
+        <!-- Section Title -->
+        <div class="text-center mb-12">
+          <h2 class="text-4xl sm:text-5xl font-light mb-4">About Us</h2>
+          <div class="w-20 h-1 bg-black mx-auto"></div>
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16"
+        >
+          <!-- Mobile Title (visible only on mobile) -->
+          <h3
+            class="text-3xl sm:text-4xl font-medium leading-tight mb-6 md:hidden w-full text-center"
+          >
+          Gulf Fresh
+          </h3>
+
+          <!-- Left: Image -->
+          <div class="w-full md:w-1/2">
+            <img
+              src="58725.webp"
+              alt="Person wearing VITA band"
+              class="w-full rounded-3xl shadow-lg"
+            />
+          </div>
+
+          <!-- Right: Content -->
+          <div class="w-full md:w-1/2">
+            <div class="max-w-lg">
+              <!-- Desktop Title (hidden on mobile) -->
+              <h3
+                class="hidden md:block text-3xl sm:text-4xl font-medium leading-tight mb-6"
+              >
+              Gulf Fresh
+              </h3>
+              <p class="text-gray-600 text-base sm:text-lg">
+                <span>At Gulf Fresh, we specialize in delivering
+                  <span class="text-[#C79A34]"
+                    >premium spices and coconuts</span
+                  >
+                  to global markets. Rooted in authenticity and excellence, our
+                  products reflect
+                  <span class="text-[#C79A34]">India's rich heritage.</span> We
+                  ensure
+                  <span class="text-[#C79A34]"
+                    >top-quality sourcing, strict quality control, and efficient
+                    logistics</span
+                  >
+                  for timely delivery. As Your Trusted Partner, we build lasting
+                  relationships based on reliability and trust. From the aroma
+                  of our spices to the charm of our antiques, we bring<span
+                    class="text-[#C79A34]"
+                  >
+                    tradition and quality </span>to the world.
+                </span>
+              </p>
+            </div>
+            <div class="mt-6">
+              <a
+                href="about.html"
+                class="inline-flex items-center px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium text-white bg-gradient-to-r from-[#C1272D] to-[#A02025] rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 group"
+              >
+                <span>Read more</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 sm:h-5 sm:w-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Showcase Section -->
+    <section
+      class="relative py-24 sm:py-32 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+      id="products"
+    >
+      <!-- Background Elements -->
+      <div class="absolute inset-0 opacity-30">
+        <div
+          class="absolute top-0 left-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob"
+        ></div>
+        <div
+          class="absolute top-0 right-0 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"
+        ></div>
+        <div
+          class="absolute -bottom-8 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"
+        ></div>
+      </div>
+
+      <div class="container mx-auto px-4 sm:px-6 relative z-10">
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-20">
+          <span
+            class="text-[#C1272D] text-sm uppercase tracking-wider mb-4 block font-medium"
+            >Our Products</span
+          >
+          <h2
+            class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6"
+          >
+            Premium Quality Products
+          </h2>
+          <p class="text-gray-600 text-lg">
+            Discover our premium range of export-quality products, carefully
+            sourced and processed to meet global standards.
+          </p>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="group relative">
+            <div
+              class="relative h-[400px] w-full overflow-hidden rounded-2xl bg-white/90 p-6 shadow-xl shadow-black/5 backdrop-blur-sm transition-transform duration-500 cursor-pointer"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-[#C1272D]/20 to-[#C1272D]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              ></div>
+              <img
+                src="images/spices-herbs.webp"
+                alt="Premium Red Chilli"
+                class="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-black/20"></div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent"
+              >
+                <h3 class="text-xl font-semibold text-white mb-2">
+                  Spices & Herbs
+                </h3>
+                <p class="text-white/80 text-sm mb-4">
+                  Premium-quality spices and herbs, rich in aroma and flavor,
+                  sourced from the finest farms.
+                </p>
+                <a href="spices.html">
+                  <button
+                    class="bg-[#C1272D]/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#C1272D]"
+                  >
+                    View All Products
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div
+              class="relative h-[400px] w-full overflow-hidden rounded-2xl bg-white/90 p-6 shadow-xl shadow-black/5 backdrop-blur-sm transition-transform duration-500 cursor-pointer"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-[#C1272D]/20 to-[#C1272D]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              ></div>
+              <img
+                src="images/fresh-produce.webp"
+                alt="Organic Turmeric"
+                class="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-black/20"></div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent"
+              >
+                <h3 class="text-xl font-semibold text-white mb-2">
+                  Fresh Produce
+                </h3>
+                <p class="text-white/80 text-sm mb-4">
+                  Naturally fresh, farm-picked fruits and vegetables, packed
+                  with nutrients and quality.
+                </p>
+                <a href="freshproduce.html">
+                  <button
+                    class="bg-[#C1272D]/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#C1272D]"
+                  >
+                    View All Products
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div
+              class="relative h-[400px] w-full overflow-hidden rounded-2xl bg-white/90 p-6 shadow-xl shadow-black/5 backdrop-blur-sm transition-transform duration-500 cursor-pointer"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-[#C1272D]/20 to-[#C1272D]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              ></div>
+              <img
+                src="images/coconut-products.webp"
+                alt="Fresh Coconuts"
+                class="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-black/20"></div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent"
+              >
+                <h3 class="text-xl font-semibold text-white mb-2">
+                  Coconut Products
+                </h3>
+                <p class="text-white/80 text-sm mb-4">
+                  Sustainably sourced, nutrient-rich coconut products for
+                  culinary and wellness needs.
+                </p>
+                <a href="coconut.html">
+                  <button
+                    class="bg-[#C1272D]/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#C1272D]"
+                  >
+                    View All Products
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div
+              class="relative h-[400px] w-full overflow-hidden rounded-2xl bg-white/90 p-6 shadow-xl shadow-black/5 backdrop-blur-sm transition-transform duration-500 cursor-pointer"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-[#C1272D]/20 to-[#C1272D]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              ></div>
+              <img
+                src="images/white-flour.webp"
+                alt="Premium Cumin"
+                class="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-black/20"></div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent"
+              >
+                <h3 class="text-xl font-semibold text-white mb-2">
+                  Non-Perishable Products
+                </h3>
+                <p class="text-white/80 text-sm mb-4">
+                  Long-lasting, high-quality goods with premium packaging for
+                  extended freshness.
+                </p>
+                <a href="nonperishables.html">
+                  <button
+                    class="bg-[#C1272D]/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#C1272D]"
+                  >
+                    View All Products
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-16">
+          <a
+            href="products.html"
+            class="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white bg-gradient-to-r from-[#C1272D] to-[#A02025] rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 group"
+          >
+            <span>View All Products</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="py-20 sm:py-24 bg-white process-background overflow-hidden">
+      <div
+        class="container mx-auto px-10 sm:px-16 md:px-24 lg:px-32 max-w-[1400px] relative z-10"
+      >
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <span
+            class="text-[#5A773F] text-sm uppercase tracking-wider mb-4 block font-medium"
+            >OUR WORKING PROCESS</span
+          >
+          <h2 class="text-[#1E293B] text-4xl sm:text-5xl font-semibold">
+            How Does We Work
+          </h2>
+        </div>
+
+        <!-- Process Steps -->
+        <div class="space-y-32">
+          <!-- Step 01 -->
+          <div
+            class="flex flex-col md:flex-row items-start justify-between gap-16"
+          >
+            <div class="w-full md:w-1/2 process-text">
+              <span class="text-[#5A773F] text-lg mb-4 block">01</span>
+              <h3 class="text-[#1E293B] text-2xl font-semibold mb-4">
+                A1 Sourcing
+              </h3>
+              <p class="text-gray-600">
+                At Gulf Fresh, A1 Sourcing means we go the extra mile to find the best, sustainably-sourced spices and coconuts from India. We blend age-old traditions with modern practices to deliver premium quality on a global scale.              </p>
+            </div>
+            <div class="w-full md:w-1/2">
+              <div class="max-w-[65%] mx-auto process-image">
+                <img src="sourcing.svg" alt="Preview Forest" class="w-full" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 02 -->
+          <div
+            class="flex flex-col md:flex-row-reverse items-start justify-between gap-16"
+          >
+            <div class="w-full md:w-1/2 process-text">
+              <span class="text-[#5A773F] text-lg mb-4 block">02</span>
+              <h3 class="text-[#1E293B] text-2xl font-semibold mb-4">
+                Expert Crafting
+              </h3>
+              <p class="text-gray-600">
+                Expert Crafting at Gulf Fresh showcases the skill and care behind every product we offer. From handpicked spices to unique antiques, our craftsmanship reflects tradition, precision, and passion.              </p>
+            </div>
+            <div class="w-full md:w-1/2">
+              <div class="max-w-[65%] mx-auto process-image">
+                <img src="crafting.svg" alt="Clone Assets" class="w-full" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 03 -->
+          <div
+            class="flex flex-col md:flex-row items-start justify-between gap-16"
+          >
+            <div class="w-full md:w-1/2 process-text">
+              <span class="text-[#5A773F] text-lg mb-4 block">03</span>
+              <h3 class="text-[#1E293B] text-2xl font-semibold mb-4">
+                Thoughtful Packaging
+              </h3>
+              <p class="text-gray-600">
+                With Thoughtful Packaging, we ensure every product reaches you fresh, safe, and full of flavor. Our eco-friendly, secure packing reflects our commitment to quality and care in every detail.              </p>
+            </div>
+            <div class="w-full md:w-1/2">
+              <div class="max-w-[65%] mx-auto process-image">
+                <img src="packaging1.svg" alt="Template Pages" class="w-full" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 04 -->
+          <div
+            class="flex flex-col md:flex-row-reverse items-start justify-between gap-16"
+          >
+            <div class="w-full md:w-1/2 process-text">
+              <span class="text-[#5A773F] text-lg mb-4 block">04</span>
+              <h3 class="text-[#1E293B] text-2xl font-semibold mb-4">
+                Reliable Delivery
+              </h3>
+              <p class="text-gray-600">
+                Reliable Delivery is at the heart of our promise—on time, every time. With efficient logistics and trusted partners, we make sure your order arrives just the way it should.              </p>
+            </div>
+            <div class="w-full md:w-1/2">
+              <div class="max-w-[65%] mx-auto process-image">
+                <img src="packaging.svg" alt="Clone Assets" class="w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+        <!-- Blog Section -->
+        <section id="blog" class="py-20 bg-[#FFE0E0] overflow-hidden">
+          <div class="max-w-7xl mx-auto px-4 md:px-8 ">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              <div class="lg:col-span-2 order-2 lg:order-1">
+                <div
+                  id="latest-blogs"
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                  <!-- Latest blog posts will be loaded here -->
+                </div>
+                <div class="mt-8 text-center lg:hidden">
+                  <a
+                    href="blog.html"
+                    class="bg-black text-[#C1272D] px-8 py-3 rounded transition-all"
+                  >
+                    View More Posts
+                  </a>
+                </div>
+              </div>
+
+              <div
+                class="lg:col-span-1 order-1 lg:order-2"
+              >
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-black">
+                  Latest News & Insights
+                </h2>
+                <p class="text-gray-600 mb-8">
+                  Get a taste of India with Gulf Fresh! From the rich aroma of our spices to the charm of our handcrafted goods, our blog dives into the stories, traditions, and behind-the-scenes of how we bring quality and culture to the world.
+                </p>
+                <a
+                  href="blog.html"
+                  class="bg-black text-[#C1272D] px-8 py-3 rounded transition-all"
+                >
+                  View More Posts
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+    <!-- FAQ Section -->
+    <section class="py-24 sm:py-32 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 sm:px-6">
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="text-[#C1272D] text-sm uppercase tracking-wider mb-4 block font-medium"
+            >FAQ</span
+          >
+          <h2
+            class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6"
+          >
+            Frequently Asked Questions
+          </h2>
+          <p class="text-gray-600 text-lg">
+            Find answers to common questions about our products and services.
+          </p>
+        </div>
+
+        <!-- FAQ Items -->
+        <div class="max-w-3xl mx-auto space-y-4">
+          <!-- FAQ Item 1 -->
+          <div class="border border-gray-200 rounded-2xl overflow-hidden">
+            <button
+              class="faq-button w-full px-6 py-4 text-left flex items-center justify-between bg-white hover:bg-gray-50 transition-all duration-200"
+            >
+              <span class="text-lg font-medium transition-colors duration-200"
+                >What spices do you offer?</span
+              >
+              <svg
+                class="w-5 h-5 text-[#C1272D] transform transition-transform duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <div class="faq-content hidden px-6 pt-4 pb-4">
+              <p class="text-gray-600">
+                We offer a range of premium spices, including turmeric, red
+                chilli, cumin, and coriander. All are sourced from trusted farms
+                and meet international standards for purity and quality.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="border border-gray-200 rounded-2xl overflow-hidden">
+            <button
+              class="faq-button w-full px-6 py-4 text-left flex items-center justify-between bg-white hover:bg-gray-50 transition-all duration-200"
+            >
+              <span class="text-lg font-medium transition-colors duration-200"
+                >How do you ensure product quality?</span
+              >
+              <svg
+                class="w-5 h-5 text-[#C1272D] transform transition-transform duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <div class="faq-content hidden px-6 pb-4">
+              <p class="text-gray-600">
+                We implement a comprehensive quality control system that
+                includes regular testing for purity, moisture content, and
+                essential oil content. Our products are stored in
+                climate-controlled facilities to maintain freshness, and we
+                conduct regular inspections to ensure our high standards are
+                met. We also work with certified laboratories for third-party
+                testing and validation.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="border border-gray-200 rounded-2xl overflow-hidden">
+            <button
+              class="faq-button w-full px-6 py-4 text-left flex items-center justify-between bg-white hover:bg-gray-50 transition-all duration-200"
+            >
+              <span class="text-lg font-medium transition-colors duration-200"
+                >Do you cater to bulk orders?</span
+              >
+              <svg
+                class="w-5 h-5 text-[#C1272D] transform transition-transform duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <div class="faq-content hidden px-6 pb-4">
+              <p class="text-gray-600">
+                Yes, we specialize in fulfilling bulk orders for both spices and
+                handicrafts. Our streamlined processes ensure timely delivery
+                and consistent quality.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-24 sm:py-32 bg-white overflow-hidden" id="contact">
+      <div class="container mx-auto px-4 sm:px-6">
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="text-[#C1272D] text-sm uppercase tracking-wider mb-4 block font-medium"
+            >Contact Us</span
+          >
+          <h2
+            class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6"
+          >
+            Get In Touch
+          </h2>
+          <p class="text-gray-600 text-lg">
+            Have questions? We're here to help you with anything you need.
+          </p>
+        </div>
+
+        <!-- Contact Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
+          <!-- Left Column: Map and Contact Info -->
+          <div class="space-y-8">
+            <!-- Map -->
+            <div class="h-[300px] rounded-2xl overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3606.3364715825123!2d55.493253374476524!3d25.326487977627895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ef5f5064dd1cda1%3A0xed876c082033f9a4!2sSharjah%20Airport%20International%20Free%20Zone%20(SAIF%20Zone)!5e0!3m2!1sen!2sin!4v1742466200403!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style="border: 0"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              >
+              </iframe>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="space-y-6">
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <div class="p-3 bg-[#C1272D]/10 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-[#C1272D]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900">
+                    Our Location
+                  </h3>
+                  <p class="mt-1 text-gray-600">
+                    GULF FRESH LLC-(FZ), SAIF-ZONE, SHARJAH, UAE.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <div class="p-3 bg-[#C1272D]/10 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-[#C1272D]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900">Email Us</h3>
+                  <p class="mt-1 text-gray-600">info@gulffresh.ae</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <div class="p-3 bg-[#C1272D]/10 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-[#C1272D]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900">Call Us</h3>
+                  <p class="mt-1 text-gray-600">+971 55972-1225</p>
+                </div>
+              </div>
+            </div>
+          </div> 
+
+<!-- Right Column: Contact Form -->
+<div class="bg-white rounded-2xl p-8 border border-gray-200">
+  <form action="https://formsubmit.co/info@jaastrading.ae" method="POST" class="space-y-6" onsubmit="setTimeout(function() { window.location.href = 'thankyou.html'; }, 1000); return true;">
+    <!-- FormSubmit Configuration -->
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_subject" value="New Contact Form Submission">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+        <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#C1272D] focus:border-[#C1272D] transition-all" />
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#C1272D] focus:border-[#C1272D] transition-all" />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+        <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#C1272D] focus:border-[#C1272D] transition-all" />
+      </div>
+      <div>
+        <label for="product" class="block text-sm font-medium text-gray-700">Product</label>
+        <input type="text" id="product" name="product" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#C1272D] focus:border-[#C1272D] transition-all" />
+      </div>
+    </div>
+
+    <div>
+      <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+      <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#C1272D] focus:border-[#C1272D] transition-all"></textarea>
+    </div>
+
+    <button type="submit" class="w-full bg-[#C1272D] text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-[#A02025] transition-colors duration-300">
+      Send Message
+    </button>
+  </form>
+</div>
+
+    </section>
+
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white overflow-hidden">
+          <div class="container mx-auto px-4 sm:px-6 py-16">
+            <!-- Main Footer Content -->
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
+            >
+              <!-- Company Info -->
+              <div class="space-y-4">
+                <img src="gulfresh.png" alt="Gulfresh Logo" class="h-14 w-auto max-w-[200px]" />
+                <p class="text-gray-400 text-sm">
+                  Your trusted partner in premium Indian spices and products,
+                  delivering quality and tradition to the world.
+                </p>
+                <div class="flex space-x-4">
+                  <a
+                    href="https://www.linkedin.com/company/jaas-exports/posts/?feedView=all"
+                    class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                  >
+                    <i class="fa-brands fa-linkedin text-2xl"></i>
+                  </a>
+                  <a
+                    href="https://www.instagram.com/jaas_exports/"
+                    class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                  >
+                    <i class="fa-brands fa-square-instagram text-2xl"></i>
+                  </a>
+                  <a
+                    href="https://www.facebook.com/jaasexports"
+                    class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                  >
+                    <i class="fa-brands fa-facebook text-2xl"></i>
+                  </a>
+                </div>
+              </div>
+    
+              <!-- Quick Links -->
+              <div>
+                <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                  <li>
+                    <a
+                      href="index.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Home</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="about.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >About Us</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="products.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Products</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/#contact"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Contact</a
+                    >
+                  </li>
+                </ul>
+              </div>
+    
+              <!-- Products -->
+              <div>
+                <h3 class="text-lg font-semibold mb-4">Our Products</h3>
+                <ul class="space-y-2">
+                  <li>
+                    <a
+                      href="spices.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Spices & Herbs</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="coconut.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Coconut Products</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="nonperishables.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Non-Perishables</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="freshproduce.html"
+                      class="text-gray-400 hover:text-[#C1272D] transition-colors"
+                      >Fresh Produce</a
+                    >
+                  </li>
+                </ul>
+              </div>
+    
+              <!-- Contact Info -->
+              <div>
+                <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start space-x-3">
+                    <svg
+                      class="w-10 h-10 text-[#C1272D] mt-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <span class="text-gray-400"
+                      >GULF FRESH LLC-(FZ), SAIF-ZONE,
+                      SHARJAH, UAE.</span
+                    >
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <svg
+                      class="w-5 h-5 text-[#C1272D] mt-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span class="text-gray-400">info@gulffresh.ae</span>
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <svg
+                      class="w-5 h-5 text-[#C1272D] mt-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      />
+                    </svg>
+                    <span class="text-gray-400">+971 55972-1225</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+    
+            <!-- Bottom Bar -->
+            <div class="pt-8 border-t border-gray-800">
+              <p class="text-gray-400 text-sm text-center">
+                <span class="text-[#C1272D]">&copy;</span> 2025 Gulf Fresh. All
+                rights reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+
+    <style>
+      @keyframes blob {
+        0% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        33% {
+          transform: translate(30px, -50px) scale(1.1);
+        }
+        66% {
+          transform: translate(-20px, 20px) scale(0.9);
+        }
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+      }
+      .animate-blob {
+        animation: blob 7s infinite;
+      }
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .animate-gradient {
+        background-size: 200% 200%;
+        animation: gradient 15s ease infinite;
+      }
+      .delay-1000 {
+        animation-delay: 1s;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.querySelector("video");
+        video.muted = true; // Ensure muted for autoplay
+        video.play().catch(function (error) {
+          console.log("Video autoplay failed:", error);
+        });
+
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.3,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("animate");
+            }
+          });
+        }, observerOptions);
+
+        document
+          .querySelectorAll(".process-image, .process-text")
+          .forEach((element) => {
+            observer.observe(element);
+          });
+
+        const faqButtons = document.querySelectorAll(".faq-button");
+
+        faqButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const content = this.nextElementSibling;
+            const icon = this.querySelector("svg");
+            const title = this.querySelector("span");
+
+            faqButtons.forEach((otherButton) => {
+              if (otherButton !== this) {
+                const otherContent = otherButton.nextElementSibling;
+                const otherTitle = otherButton.querySelector("span");
+                const otherIcon = otherButton.querySelector("svg");
+
+                otherContent.classList.add("hidden");
+                otherTitle.style.color = ""; // Reset color
+                otherIcon.classList.remove("rotate-180");
+              }
+            });
+
+            // Toggle current FAQ
+            content.classList.toggle("hidden");
+            title.style.color = content.classList.contains("hidden")
+              ? ""
+              : "#C1272D";
+            icon.classList.toggle("rotate-180");
+          });
+        });
+      });
+      // Initialize Supabase client
+      const supabaseClient = supabase.createClient(
+        "https://qvoulabhiqbiygezburk.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2b3VsYWJoaXFiaXlnZXpidXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NTQxMDIsImV4cCI6MjA2MjAzMDEwMn0.veH6UVxvctJJlC0kvuMeP3FVD3aCMFF85UptJJZA7uM"
+      );
+
+      // Load latest 3 blog posts
+      async function loadLatestBlogPosts() {
+        try {
+          const { data, error } = await supabaseClient
+            .from("blog")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(3);
+
+          if (error) throw error;
+
+          const blogSection = document.getElementById("latest-blogs");
+          if (!data || data.length === 0) {
+            blogSection.innerHTML =
+              '<p class="text-gray-400 text-center">No blog posts found</p>';
+            return;
+          }
+
+          blogSection.innerHTML = data
+            .map(
+              (post, index) => `
+            <div 
+              class="border-2 border-black rounded-lg overflow-hidden group hover:bg-white/5 transition-colors"
+            >
+              <div class="aspect-video overflow-hidden">
+                <img
+                  src="${post.image_url}"
+                  alt="${post.title}"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+              <div class="p-6">
+                <span class="text-sm text-gray-600">${new Date(
+                  post.publish_date
+                ).toLocaleDateString()}</span>
+                <h3 class="text-xl font-bold mt-2 mb-3">
+                  ${post.title}
+                </h3>
+                <p class="text-gray-600 text-sm mb-4">
+                  ${post.description}
+                </p>
+                <a href="blog.html" class="text-gray-600 hover:text-gray-400 text-sm font-medium">Read More →</a>
+              </div>
+            </div>
+          `
+            )
+            .join("");
+
+          // Refresh AOS animations
+          AOS.refresh();
+        } catch (error) {
+          console.error("Error loading blog posts:", error);
+          document.getElementById("latest-blogs").innerHTML =
+            '<p class="text-red-500 text-center">Error loading blog posts</p>';
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize AOS
+        AOS.init({
+          duration: 800,
+          once: true,
+        });
+
+        // Load latest blog posts
+        loadLatestBlogPosts();
+      });
+      
+    
+
+    </script>
+    <script src="nav.js"></script>
+  </body>
+</html>
+
+

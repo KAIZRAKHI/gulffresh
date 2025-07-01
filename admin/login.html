@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - JAAAS Exports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .login-container {
+            min-height: 100vh;
+            background-image: url('../images/about.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .glass-effect {
+            background: rgba(36, 36, 36, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container relative flex items-center justify-center p-4">
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 bg-black/50"></div>
+
+        <!-- Login Form -->
+        <div class="relative z-10 w-full max-w-md">
+            <!-- Logo Section -->
+            <div class="text-center mb-8">
+                <img src="../jaaas.png" alt="JAAAS Logo" class="h-12 mx-auto mb-4">
+                <h1 class="text-2xl sm:text-3xl font-bold">Admin Login</h1>
+                <p class="text-gray-400 mt-2">Enter your credentials to access the dashboard</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="glass-effect p-6 sm:p-8 rounded-lg border border-gray-800">
+                <form id="loginForm" class="space-y-6">
+                    <!-- Email Field -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" 
+                                   id="email" 
+                                   required 
+                                   class="w-full pl-10 pr-4 py-2 bg-[#1a1a1a] border border-gray-800 rounded focus:outline-none focus:border-white transition-colors"
+                                   placeholder="Enter your email">
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" 
+                                   id="password" 
+                                   required 
+                                   class="w-full pl-10 pr-4 py-2 bg-[#1a1a1a] border border-gray-800 rounded focus:outline-none focus:border-white transition-colors"
+                                   placeholder="Enter your password">
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="errorMessage" class="hidden text-red-500 text-sm text-center"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                            class="w-full bg-[#2ba2c5] text-black py-2 rounded hover:bg-gray-100 transition-colors flex items-center justify-center">
+                        <span>Login</span>
+                        <i class="ri-arrow-right-line ml-2"></i>
+                    </button>
+                </form>
+
+                <!-- Back to Website Link -->
+                <div class="mt-6 text-center">
+                    <a href="../index.html" class="text-gray-400 hover:text-white inline-flex items-center">
+                        <i class="ri-arrow-left-line mr-2"></i>
+                        <span>Back to Website</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase client
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://qvoulabhiqbiygezburk.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2b3VsYWJoaXFiaXlnZXpidXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NTQxMDIsImV4cCI6MjA2MjAzMDEwMn0.veH6UVxvctJJlC0kvuMeP3FVD3aCMFF85UptJJZA7uM'
+        );
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const submitButton = e.target.querySelector('button[type="submit"]');
+
+            try {
+                // Show loading state
+                submitButton.innerHTML = '<i class="ri-loader-4-line animate-spin"></i>';
+                errorMessage.classList.add('hidden');
+
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                if (data.user) {
+                    // Store the session
+                    localStorage.setItem('supabase.auth.token', data.session.access_token);
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }
+
+            } catch (error) {
+                console.error('Error details:', error);
+                errorMessage.textContent = 'Invalid email or password';
+                errorMessage.classList.remove('hidden');
+                submitButton.innerHTML = '<span>Login</span><i class="ri-arrow-right-line ml-2"></i>';
+            }
+        });
+
+        // Check if already logged in
+        async function checkAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Check auth status when page loads
+        checkAuth();
+    </script>
+</body>
+</html> 
